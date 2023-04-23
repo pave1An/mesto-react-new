@@ -24,16 +24,14 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) {
       <section className="profile">
         <div className="profile__avatar-area">
           <img className="profile__avatar" src={userData.userAvatar} alt="аватар профиля"/>
-          <button type="button" onClick={onEditAvatar} className="profile__avatar-edit-btn"></button>
+          <button type="button" onClick={onEditAvatar} className="profile__avatar-edit-btn" />
         </div>
         <div className="profile__info">
           <h1 className="profile__name">{userData.userName}</h1>
-          <button type="button" onClick={onEditProfile} className="profile__edit-btn" name="profile-edit" aria-label="Редактировать профиль">
-          </button>
+          <button type="button" onClick={onEditProfile} className="profile__edit-btn" name="profile-edit" aria-label="Редактировать профиль" />
           <p className="profile__job">{userData.userDescription}</p>
         </div>
-        <button type="button" className="profile__add-btn" onClick={onAddPlace} name="profile-add" aria-label="Добавить фото">
-        </button>
+        <button type="button" className="profile__add-btn" onClick={onAddPlace} name="profile-add" aria-label="Добавить фото" />
       </section>
 
       <div className="popup popup_type_confirmation">
