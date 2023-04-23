@@ -1,16 +1,15 @@
 import React from 'react';
 
 function Footer() {
-  const[year, setYear] = React.useState('')
-
-  React.useEffect(() => {
+  function setCarrentYear() {
     const date = new Date();
-    setYear(date.getFullYear())
-  }, [year]);
+    const year = date.getFullYear();
+    return year;
+  };
 
   return ( 
     <footer className="footer">
-      <p className="footer__copyright">© {year} Mesto Russia</p>
+      <p className="footer__copyright">© {setCarrentYear()} Mesto Russia</p>
     </footer>
   );
 }

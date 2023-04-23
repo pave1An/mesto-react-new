@@ -19,18 +19,6 @@ function App() {
       name: 'avatar-edit',
       title: 'Обновить аватар',
       buttonText: 'Сохранить',
-      children: 
-        <fieldset className="popup__fieldset">
-          <input
-            id="avatar-input"
-            type="url"
-            className="popup__input"
-            name="avatar"
-            placeholder="Ссылка на изображение"
-            required="required"
-          />
-          <span className="popup__error avatar-input-error"></span>
-        </fieldset>
     });
     setIsOpen(true);
   }
@@ -41,7 +29,64 @@ function App() {
       name: 'profile-form',
       title: 'Редактировать профиль',
       buttonText: 'Сохранить',
-      children: 
+    });
+    setIsOpen(true);
+  }
+
+  function handleAddPlaceClick() {
+    setIsAddPlacePopupOpen(!isAddPlacePopupOpen);
+    setFormData({
+      name: 'card-form',
+      title: 'Новое место',
+      buttonText: 'Создать',
+    });
+    setIsOpen(true);
+  }
+
+  function handleCardClick(card) { 
+    setSelectedCard(card);
+  }
+
+  function closeAllPopups(){
+    setIsOpen (false);
+    setTimeout(() => {
+      setIsEditAvatarPopupOpen(false);
+      setIsEditProfilePopupOpen(false);
+      setIsAddPlacePopupOpen(false);
+      setFormData({});
+    }, 200 );
+    setSelectedCard({});
+  }
+  
+  return (
+    <div className="page">
+      <Header />
+      <Main 
+        onEditProfile={handleEditProfileClick} 
+        onAddPlace={handleAddPlaceClick} 
+        onEditAvatar={handleEditAvatarClick}
+        onCardClick={handleCardClick}
+        onClose={closeAllPopups}
+      />
+      <PopupWithForm 
+        isOpen={isOpen} 
+        onClose={closeAllPopups} 
+        formData={formData}
+      >
+        {isEditAvatarPopupOpen && 
+        <fieldset className="popup__fieldset">
+          <input
+            id="avatar-input"
+            type="url"
+            className="popup__input"
+            name="avatar"
+            placeholder="Ссылка на изображение"
+            required="required"
+          />
+          <span className="popup__error avatar-input-error"></span>
+        </fieldset>}
+
+        {isEditProfilePopupOpen && 
         <fieldset className="popup__fieldset">
           <input
             id="name-input"
@@ -65,72 +110,32 @@ function App() {
             required="required"
           />
           <span className="popup__error job-input-error"></span>
-        </fieldset>
-    });
-    setIsOpen(true);
-  }
+        </fieldset>}
 
-  function handleAddPlaceClick() {
-    setIsAddPlacePopupOpen(!isAddPlacePopupOpen);
-    setFormData({
-      name: 'card-form',
-      title: 'Новое место',
-      buttonText: 'Создать',
-      children: 
-      <fieldset className="popup__fieldset">
-        <input
-          id="title-input"
-          type="text"
-          className="popup__input"
-          name="name"
-          placeholder="Название"
-          minLength="2"
-          maxLength="30"
-          required="required"
+        {isAddPlacePopupOpen && 
+        <fieldset className="popup__fieldset">
+          <input
+            id="title-input"
+            type="text"
+            className="popup__input"
+            name="name"
+            placeholder="Название"
+            minLength="2"
+            maxLength="30"
+            required="required"
+            />
+          <span className="popup__error title-input-error"></span>
+          <input
+            id="url-input"
+            type="url"
+            className="popup__input"
+            name="link"
+            placeholder="Ссылка на картинку"
+            required="required"
           />
-        <span className="popup__error title-input-error"></span>
-        <input
-          id="url-input"
-          type="url"
-          className="popup__input"
-          name="link"
-          placeholder="Ссылка на картинку"
-          required="required"
-        />
-        <span className="popup__error url-input-error"></span>
-      </fieldset>
-    });
-    setIsOpen(true);
-  }
-
-  function handleCardClick(card) { 
-    setSelectedCard(card);
-  }
-
-  function closeAllPopups(){
-    setIsOpen(false);
-    setIsEditAvatarPopupOpen(false);
-    setIsEditProfilePopupOpen(false);
-    setIsAddPlacePopupOpen(false);
-    setSelectedCard({});
-    setFormData({});
-  }
-  
-  return (
-    <div className="page">
-      <Header />
-      <Main 
-        onEditProfile={handleEditProfileClick} 
-        onAddPlace={handleAddPlaceClick} 
-        onEditAvatar={handleEditAvatarClick}
-        onCardClick={handleCardClick}
-        onClose={closeAllPopups}
-      />
-      <PopupWithForm 
-        isOpen={isOpen} 
-        onClose={closeAllPopups} 
-        formData={formData}
-      />
+          <span className="popup__error url-input-error"></span>
+        </fieldset>}
+      </PopupWithForm>
       <ImagePopup card={selectedCard} closeAllPopups={closeAllPopups} onClose={closeAllPopups} />
       <Footer />
     </div>

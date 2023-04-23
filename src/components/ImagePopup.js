@@ -10,8 +10,7 @@ function ImagePopup({ card, onClose }) {
           name="form-close" 
           aria-label="Закрыть"
           onClick={onClose}
-        >
-        </button>
+        />
         <img src= {card.link} alt={card.name} className="popup__image-view"/>
         <p className="popup__image-title">{card.name}</p>
       </div>
