@@ -2,7 +2,7 @@ import React from 'react';
 
 function PopupWithForm({ isOpen, onClose, formData: {name, title, buttonText}, children}) {
   return ( 
-	  <div className={`popup ${isOpen && 'popup_opened'} popup_type_${name}`}>
+    <div className={`popup ${isOpen && 'popup_opened'} popup_type_${name}`}>
       <div className= 'popup__container'>
         <button type="button" onClick={onClose} className="popup__close-btn" name="form-close" aria-label="Закрыть" />
         <h3 className="popup__title">{title}</h3>
