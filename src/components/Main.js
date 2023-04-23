@@ -36,8 +36,7 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) {
 
       <div className="popup popup_type_confirmation">
         <div className="popup__container">
-          <button type="button" className="popup__close-btn" name="form-close" aria-label="Закрыть">
-          </button>
+          <button type="button" className="popup__close-btn" name="form-close" aria-label="Закрыть" />
           <h3 className="popup__title">Вы уверены?</h3>
           <button type="button" className="popup__button" name="delete-card" aria-label="Удалить карточку">Да</button>
         </div>
