@@ -9,38 +9,18 @@ function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
-  const [isOpen, setIsOpen] = React.useState(false);
-  const [formData, setFormData] = React.useState({});
   const [selectedCard, setSelectedCard] = React.useState({});
 
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(!isEditAvatarPopupOpen);
-    setFormData({
-      name: 'avatar-edit',
-      title: 'Обновить аватар',
-      buttonText: 'Сохранить',
-    });
-    setIsOpen(true);
   }
   
   function handleEditProfileClick() {
     setIsEditProfilePopupOpen(!isEditProfilePopupOpen);
-    setFormData({
-      name: 'profile-form',
-      title: 'Редактировать профиль',
-      buttonText: 'Сохранить',
-    });
-    setIsOpen(true);
   }
 
   function handleAddPlaceClick() {
     setIsAddPlacePopupOpen(!isAddPlacePopupOpen);
-    setFormData({
-      name: 'card-form',
-      title: 'Новое место',
-      buttonText: 'Создать',
-    });
-    setIsOpen(true);
   }
 
   function handleCardClick(card) { 
@@ -48,13 +28,9 @@ function App() {
   }
 
   function closeAllPopups(){
-    setIsOpen (false);
-    setTimeout(() => {
       setIsEditAvatarPopupOpen(false);
       setIsEditProfilePopupOpen(false);
       setIsAddPlacePopupOpen(false);
-      setFormData({});
-    }, 200 );
     setSelectedCard({});
   }
   
@@ -67,13 +43,14 @@ function App() {
         onEditAvatar={handleEditAvatarClick}
         onCardClick={handleCardClick}
         onClose={closeAllPopups}
-      />
+        />
       <PopupWithForm 
-        isOpen={isOpen} 
+        isOpen={isEditAvatarPopupOpen} 
         onClose={closeAllPopups} 
-        formData={formData}
-      >
-        {isEditAvatarPopupOpen && 
+        name='avatar-edit'
+        title='Обновить аватар'
+        buttonText='Сохранить'
+        >
         <fieldset className="popup__fieldset">
           <input
             id="avatar-input"
@@ -82,11 +59,18 @@ function App() {
             name="avatar"
             placeholder="Ссылка на изображение"
             required="required"
-          />
+            />
           <span className="popup__error avatar-input-error"></span>
-        </fieldset>}
+        </fieldset>
+      </PopupWithForm>
 
-        {isEditProfilePopupOpen && 
+      <PopupWithForm 
+        isOpen={isEditProfilePopupOpen} 
+        onClose={closeAllPopups} 
+        name='profile-form'
+        title='Редактировать профиль'
+        buttonText='Сохранить'
+      >
         <fieldset className="popup__fieldset">
           <input
             id="name-input"
@@ -110,9 +94,16 @@ function App() {
             required="required"
           />
           <span className="popup__error job-input-error"></span>
-        </fieldset>}
+        </fieldset>
+      </PopupWithForm>
 
-        {isAddPlacePopupOpen && 
+      <PopupWithForm 
+        isOpen={isAddPlacePopupOpen} 
+        onClose={closeAllPopups} 
+        name='card-form'
+        title='Новое место'
+        buttonText='Создать'
+      >
         <fieldset className="popup__fieldset">
           <input
             id="title-input"
@@ -134,8 +125,17 @@ function App() {
             required="required"
           />
           <span className="popup__error url-input-error"></span>
-        </fieldset>}
+        </fieldset>
       </PopupWithForm>
+      
+      <PopupWithForm
+        isOpen={false} 
+        onClose={closeAllPopups} 
+        name='confirmation'
+        title='Вы уверены?'
+        buttonText='Да'
+      />      
+      
       <ImagePopup card={selectedCard} closeAllPopups={closeAllPopups} onClose={closeAllPopups} />
       <Footer />
     </div>

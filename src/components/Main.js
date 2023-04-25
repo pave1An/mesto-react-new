@@ -34,14 +34,6 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) {
         <button type="button" className="profile__add-btn" onClick={onAddPlace} name="profile-add" aria-label="Добавить фото" />
       </section>
 
-      <div className="popup popup_type_confirmation">
-        <div className="popup__container">
-          <button type="button" className="popup__close-btn" name="form-close" aria-label="Закрыть" />
-          <h3 className="popup__title">Вы уверены?</h3>
-          <button type="button" className="popup__button" name="delete-card" aria-label="Удалить карточку">Да</button>
-        </div>
-      </div>
-
       <section className="photo-grid">
         <ul className="photo-grid__list">
           {cards.map((card) => <Card key={card._id} card={card} onCardClick={onCardClick} />)}
