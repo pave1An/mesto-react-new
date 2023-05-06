@@ -19,11 +19,6 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
     onAddPlace({ name, link });
   }
 
-  React.useEffect(() => {
-    setName('');
-    setLink('');
-  }, [onAddPlace]);
-
   return (
     <PopupWithForm 
       isOpen={isOpen} 
@@ -46,7 +41,7 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
           value={name}
           onChange={handleNameChange}
         />
-        <span className="popup__error title-input-error"></span>
+        <span className="popup__error title-input-error popup__error_visible"></span>
         <input
           id="url-input"
           type="url"
@@ -57,7 +52,7 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
           value={link}
           onChange={handleLinkChange}
         />
-        <span className="popup__error url-input-error"></span>
+        <span className="popup__error url-input-error popup__error_visible"></span>
       </fieldset>
     </PopupWithForm>
   );

@@ -16,7 +16,7 @@ function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
   const [selectedCard, setSelectedCard] = React.useState({});
-  const [currentUser, setCurrentUser] = React.useState({});
+  const [currentUser, setCurrentUser] = React.useState({ name: '', about: '' });
   const [cards, setCards] = React.useState([]);
 
   function handleEditAvatarClick() {
@@ -66,11 +66,10 @@ function App() {
   }
 
   function handleAddPlaceSubmit(card) {
-    console.log(card)
     api.postCard(card)
     .then(newCard => {
-      setCards([newCard, ...cards])
-      closeAllPopups()
+      setCards([newCard, ...cards]);
+      closeAllPopups();
     })
     .catch(err => console.log(`Ошибка: ${err.status}`));
   }
@@ -91,15 +90,13 @@ function App() {
     .catch((err) => console.log(`Ошибка: ${err.status}`));
   },[]);
 
-
-  
   return (
     <div className="page">
       <CurrentUserContext.Provider value={currentUser}>
         <Header />
         <Main 
           onEditProfile={handleEditProfileClick} 
-          onAddPlace={handleAddPlaceClick} 
+          onAddPlace={handleAddPlaceClick}
           onEditAvatar={handleEditAvatarClick}
           onCardClick={handleCardClick}
           onClose={closeAllPopups}
@@ -107,19 +104,28 @@ function App() {
           onCardDelete={handleCardDelete}
           cards={cards}
         />
-        
-      <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />
-      <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
-      <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit} />
-        
+        <EditAvatarPopup 
+          isOpen={isEditAvatarPopupOpen}
+          onClose={closeAllPopups}
+          onUpdateAvatar={handleUpdateAvatar}
+        />
+        <EditProfilePopup 
+          isOpen={isEditProfilePopupOpen}
+          onClose={closeAllPopups}
+          onUpdateUser={handleUpdateUser}
+        />
+        <AddPlacePopup 
+          isOpen={isAddPlacePopupOpen}
+          onClose={closeAllPopups}
+          onAddPlace={handleAddPlaceSubmit}
+        />
         <PopupWithForm
-          isOpen={false} 
-          onClose={closeAllPopups} 
+          isOpen={false}
+          onClose={closeAllPopups}
           name='confirmation'
           title='Вы уверены?'
           buttonText='Да'
-        />      
-        
+        />
         <ImagePopup card={selectedCard} closeAllPopups={closeAllPopups} onClose={closeAllPopups} />
         <Footer />
       </CurrentUserContext.Provider>
