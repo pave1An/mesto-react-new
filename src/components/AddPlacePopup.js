@@ -1,58 +1,64 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import PopupWithForm from "./PopupWithForm";
 
-function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
-  const [ name, setName] = React.useState('');
-  const [ link, setLink] = React.useState('');
+function AddPlacePopup({ isOpen, onClose, onAddPlace, isSaving, onValidation, errorText}) {
+  const [placeData, setPlaceData] = useState({ name: '', link: ''});
   
-  
-  function handleNameChange(e) {
-    setName(e.target.value);
+  function handleInputChange(e) {
+    const { name, value } = e.target;
+    setPlaceData(prevState => ({...prevState, [name]: value}));
+    onValidation(e);
   }
-  
-  function handleLinkChange(e) {
-    setLink(e.target.value);
-  }
+
+  const { name, link } = placeData;
 
   function handleSubmit(e) {
     e.preventDefault();
-    onAddPlace({ name, link });
+    onAddPlace(placeData);
   }
 
+  useEffect(() => {
+    setPlaceData({ name: '', link: ''});
+  }, [isOpen]);
+
   return (
-    <PopupWithForm 
-      isOpen={isOpen} 
-      onClose={onClose} 
+    <PopupWithForm
+      isOpen={isOpen}
+      onClose={onClose}
       name='card-form'
       title='Новое место'
-      buttonText='Создать'
+      buttonText={isSaving ? 'Сохранение...' : 'Создать'}
       onSubmit={handleSubmit}
+      isFormValid={
+        Object.values(errorText).every(i => i === '') 
+        && Object.values(placeData).every(i => i !== '') 
+      }
     >
       <fieldset className="popup__fieldset">
         <input
           id="title-input"
           type="text"
-          className="popup__input"
+          className={`popup__input ${errorText.name && 'popup__input_type_error'}`}
           name="name"
           placeholder="Название"
           minLength="2"
           maxLength="30"
           required="required"
           value={name}
-          onChange={handleNameChange}
+          onChange={handleInputChange}
         />
-        <span className="popup__error title-input-error popup__error_visible"></span>
+        <span className="popup__error popup__error_visible">{errorText.name}</span>
         <input
           id="url-input"
           type="url"
-          className="popup__input"
+          className={`popup__input ${errorText.link && 'popup__input_type_error'}`}
           name="link"
           placeholder="Ссылка на картинку"
           required="required"
           value={link}
-          onChange={handleLinkChange}
+          onChange={handleInputChange}
         />
-        <span className="popup__error url-input-error popup__error_visible"></span>
+        <span className="popup__error popup__error_visible">{errorText.link}</span>
       </fieldset>
     </PopupWithForm>
   );
