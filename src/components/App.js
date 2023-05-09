@@ -1,38 +1,53 @@
-import React from 'react';
 import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
-import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
 import api from '../utils/Api';
 import EditAvatarPopup from './EditAvatarPopup';
 import EditProfilePopup from './EditProfilePopup';
-import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import AddPlacePopup from './AddPlacePopup';
+import DeleteCardPopup from './DeleteCardPopup';
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
+import { useState, useEffect } from 'react';
 
 
 function App() {
-  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
-  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
-  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
-  const [selectedCard, setSelectedCard] = React.useState({});
-  const [currentUser, setCurrentUser] = React.useState({ name: '', about: '' });
-  const [cards, setCards] = React.useState([]);
+  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
+  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
+  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
+  const [isDeleteCardPopupOpen, setIsDeleteCardPopupOpen] = useState(false);
+  const [selectedCard, setSelectedCard] = useState({});
+  const [currentUser, setCurrentUser] = useState({ name: '', about: '' });
+  const [cards, setCards] = useState([]);
+  const [isSaving, setIsSaving] = useState(false);
+  const [deletionCardId, setDeletionCardId] = useState('');
+  const [errorText, setErrorText] = useState({});
+ 
+  function setValidationMessage(e) {
+    setErrorText((prevValue) => (
+      { ...prevValue, [e.target.name]: e.target.validationMessage }
+    ));
+  }
 
   function handleEditAvatarClick() {
-    setIsEditAvatarPopupOpen(!isEditAvatarPopupOpen);
+    setIsEditAvatarPopupOpen(true);
   }
   
   function handleEditProfileClick() {
-    setIsEditProfilePopupOpen(!isEditProfilePopupOpen);
+    setIsEditProfilePopupOpen(true);
   }
 
   function handleAddPlaceClick() {
-    setIsAddPlacePopupOpen(!isAddPlacePopupOpen);
+    setIsAddPlacePopupOpen(true);
   }
-
+  
   function handleCardClick(card) { 
     setSelectedCard(card);
+  }
+  
+  function handleDeleteClick(cardId) {
+    setIsDeleteCardPopupOpen(true);
+    setDeletionCardId(cardId);
   }
 
   function handleCardLike(card, isLiked) { 
@@ -41,47 +56,60 @@ function App() {
     .catch((err) => console.log(`Ошибка: ${err.status}`));
   }
 
-  function handleCardDelete(cardId) {
-    api.deleteCard(cardId)
-    .then(() => setCards(cards => cards.filter(с => с._id !== cardId)))
-    .catch((err) => console.log(`Ошибка: ${err.status}`));
+  function handleCardDelete() {
+    setIsSaving(true);
+    api.deleteCard(deletionCardId)
+    .then(() => {
+      setCards(cards => cards.filter(с => с._id !== deletionCardId));
+      closeAllPopups();
+    })
+    .catch((err) => console.log(`Ошибка: ${err.status}`))
+    .finally(() => setIsSaving(false));
   }
 
   function handleUpdateUser(userData) {
+    setIsSaving(true);
     api.patchUserInfo(userData)
     .then(res => {
       setCurrentUser(res);
       closeAllPopups();
     })
-    .catch(err => console.log(`Ошибка: ${err.status}`));
+    .catch((err) => console.log(`Ошибка: ${err.status}`))
+    .finally(() => setIsSaving(false));
   }
-
+  
   function handleUpdateAvatar(avatar) {
+    setIsSaving(true);
     api.patchAvatar(avatar)
     .then((res) => {
       setCurrentUser(res);
       closeAllPopups();
     })
-    .catch(err => console.log(`Ошибка: ${err.status}`));
+    .catch((err) => console.log(`Ошибка: ${err.status}`))
+    .finally(() => setIsSaving(false));
   }
 
   function handleAddPlaceSubmit(card) {
+    setIsSaving(true);
     api.postCard(card)
     .then(newCard => {
       setCards([newCard, ...cards]);
       closeAllPopups();
     })
-    .catch(err => console.log(`Ошибка: ${err.status}`));
+    .catch((err) => console.log(`Ошибка: ${err.status}`))
+    .finally(() => setIsSaving(false));
   }
 
-  function closeAllPopups(){
+  function closeAllPopups() {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
+    setIsDeleteCardPopupOpen(false);
     setSelectedCard({});
+    setErrorText({});
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     Promise.all([api.getUserInfo(), api.getInitialCards()])
     .then(([user, cards]) => {
       setCurrentUser(user);
@@ -101,30 +129,38 @@ function App() {
           onCardClick={handleCardClick}
           onClose={closeAllPopups}
           onCardLike={handleCardLike}
-          onCardDelete={handleCardDelete}
+          onCardDelete={handleDeleteClick}
           cards={cards}
         />
         <EditAvatarPopup 
           isOpen={isEditAvatarPopupOpen}
           onClose={closeAllPopups}
           onUpdateAvatar={handleUpdateAvatar}
-        />
+          isSaving={isSaving}
+          onValidation={setValidationMessage}
+          errorText={errorText}
+          />
         <EditProfilePopup 
           isOpen={isEditProfilePopupOpen}
           onClose={closeAllPopups}
           onUpdateUser={handleUpdateUser}
-        />
+          isSaving={isSaving}
+          onValidation={setValidationMessage}
+          errorText={errorText}
+          />
         <AddPlacePopup 
           isOpen={isAddPlacePopupOpen}
           onClose={closeAllPopups}
           onAddPlace={handleAddPlaceSubmit}
+          isSaving={isSaving}
+          onValidation={setValidationMessage}
+          errorText={errorText}
         />
-        <PopupWithForm
-          isOpen={false}
+        <DeleteCardPopup
+          isOpen={isDeleteCardPopupOpen}
           onClose={closeAllPopups}
-          name='confirmation'
-          title='Вы уверены?'
-          buttonText='Да'
+          onDeleteCard={handleCardDelete}
+          isSaving={isSaving}
         />
         <ImagePopup card={selectedCard} closeAllPopups={closeAllPopups} onClose={closeAllPopups} />
         <Footer />
