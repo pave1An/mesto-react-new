@@ -11,6 +11,7 @@ import DeleteCardPopup from './DeleteCardPopup';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import { useState, useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
+import { InfoTooltip } from './InfoTooltip';
 
 function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
@@ -169,7 +170,8 @@ function App() {
           isSaving={isSaving}
           />
         <ImagePopup card={selectedCard} closeAllPopups={closeAllPopups} onClose={closeAllPopups} />
-        {/* <Footer /> */}
+        <InfoTooltip onClose={closeAllPopups} isOpen={false} />
+        <Footer />
       </CurrentUserContext.Provider>
     </div>
   );

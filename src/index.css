@@ -37,6 +37,8 @@
 @import "./blocks/popup/__image-title/popup__image-title.css";
 @import "./blocks/popup/__error/popup__error.css";
 @import "./blocks/popup/__error/_visible/popup__error_visible.css";
+@import "./blocks/popup/__tooltip-text/popup__tooltip-text.css";
+@import "./blocks/popup/__tooltip-image/popup__tooltip-image.css";
 
 @import "./blocks/photo-grid/photo-grid.css";
 @import "./blocks/photo-grid/__list/photo-grid__list.css";
