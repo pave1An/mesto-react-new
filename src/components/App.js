@@ -1,4 +1,5 @@
 import Header from './Header';
+import Registration from './Registration';
 import Main from './Main';
 import Footer from './Footer';
 import ImagePopup from './ImagePopup';
@@ -9,7 +10,7 @@ import AddPlacePopup from './AddPlacePopup';
 import DeleteCardPopup from './DeleteCardPopup';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import { useState, useEffect } from 'react';
-
+import { Route, Routes } from 'react-router-dom';
 
 function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
@@ -122,16 +123,21 @@ function App() {
     <div className="page">
       <CurrentUserContext.Provider value={currentUser}>
         <Header />
-        <Main 
-          onEditProfile={handleEditProfileClick} 
-          onAddPlace={handleAddPlaceClick}
-          onEditAvatar={handleEditAvatarClick}
-          onCardClick={handleCardClick}
-          onClose={closeAllPopups}
-          onCardLike={handleCardLike}
-          onCardDelete={handleDeleteClick}
-          cards={cards}
-        />
+        <Routes>
+          <Route path='/' element={
+            <Main 
+              onEditProfile={handleEditProfileClick} 
+              onAddPlace={handleAddPlaceClick}
+              onEditAvatar={handleEditAvatarClick}
+              onCardClick={handleCardClick}
+              onClose={closeAllPopups}
+              onCardLike={handleCardLike}
+              onCardDelete={handleDeleteClick}
+              cards={cards}
+            />}
+          />
+        </Routes>
+        <Registration />
         <EditAvatarPopup 
           isOpen={isEditAvatarPopupOpen}
           onClose={closeAllPopups}
@@ -155,15 +161,15 @@ function App() {
           isSaving={isSaving}
           onValidation={setValidationMessage}
           errorText={errorText}
-        />
+          />
         <DeleteCardPopup
           isOpen={isDeleteCardPopupOpen}
           onClose={closeAllPopups}
           onDeleteCard={handleCardDelete}
           isSaving={isSaving}
-        />
+          />
         <ImagePopup card={selectedCard} closeAllPopups={closeAllPopups} onClose={closeAllPopups} />
-        <Footer />
+        {/* <Footer /> */}
       </CurrentUserContext.Provider>
     </div>
   );

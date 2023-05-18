@@ -1,0 +1,9 @@
+.form-section {
+  padding: 60px 0 50px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  max-width: 358px;
+  height: 600px;
+  width: 100%;
+}
